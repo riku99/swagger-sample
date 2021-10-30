@@ -1,0 +1,62 @@
+# https://qiita.com/rllllho/items/53a0023b32f4c0f8eabb
+swagger: "2.0"
+info:
+  description: "これはペットに関するAPIです" # ドキュメントについての説明
+  version: "1.0.0" # apiのバージョン
+  title: "Petstore API" # ドキュメントのタイトル
+
+# エントリポイント郡
+paths:
+  /pet/{petId}:
+    get:
+      summary: "ペット情報の取得"
+      description: "指定されたpetIdの情報を返す"
+      parameters:
+        - name: "petId" # パラメーター名
+          in: "path" # このパラメータがどこにあるか。ex) path, query, body
+          description: "取得したいペットのID"
+          required: true
+          type: "integer" # inがbody以外である場合必須
+          format: "int64"
+      responses:
+        200: # 正常の場合返したいコード
+          description: "成功時のレスポンス"
+          # schemaはJSONオブジェクトや配列を扱いたい時に使用
+          schema:
+            # $refでschemaをdefinitionから使用
+            $ref: "#/definitions/Pet"
+            # type: "object"
+            # properties:
+            #   id:
+            #     type: "integer"
+            #     format: "int64"
+            #   name:
+            #     type: "string"
+            #     example: "doggle"
+
+# schemaオブジェクトを複数回使用したい場合definitions内でテンプレートを定義することで使いまわせる
+definitions:
+  Pet: # テンプレート名
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+        example: "doggie"
+      stores:
+        type: "array"
+        items:
+          # このdifiniitons内で記述したテンプレートにもアクセス可能
+          $ref: "#/definitions/Store"
+  Store:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        example: 1
+      store_name:
+        type: "string"
+        example: "ABC PET STORE"
